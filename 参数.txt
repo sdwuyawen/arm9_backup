@@ -1,0 +1,51 @@
+baudrate=115200
+bootargs=console=ttySAC0,115200 root=/dev/mtdblock3
+bootcmd=nand read 30008000 kernel;bootm 30008000
+bootdelay=5
+ethact=smc911x
+ethaddr=00:40:5c:26:0a:5b
+ipaddr=202.194.201.60
+
+mtddevname=u-boot
+mtddevnum=0
+mtdids=nand0=2416-0
+mtdparts=mtdparts=2416-0:512k(u-boot),128k(params),3456k(kernel),-(rootfs)
+
+netmask=255.255.255.0
+
+partition=nand0,0
+
+serverip=202.194.201.222
+stderr=serial
+stdin=serial
+stdout=serial
+
+
+baudrate=115200
+bootargs=console=ttySAC0,115200 root=/dev/mtdblock3
+bootcmd=nand read 30008000 kernel;bootm 30008000
+bootdelay=5
+ethact=smc911x
+ethaddr=00:40:5c:26:0a:5b
+ipaddr=202.194.201.60
+
+netmask=255.255.255.0
+
+serverip=202.194.201.222
+stderr=serial
+stdin=serial
+stdout=serial
+
+
+movi read 3600000# 3996c00 c0000000
+nand scrub 600000 4000000
+nand write.yaffs c0000000 600000 3996c00 
+
+
+make clean 
+make ARCH=arm CROSS_COMPILE=arm-linux- zImage 
+
+LD arch/arm/boot/compressed/vmlinux
+OBJCOPY arch/arm/boot/zImage
+Kernel: arch/arm/boot/zImage is ready
+cp arch/arm/boot/zImage ~/workspace/target

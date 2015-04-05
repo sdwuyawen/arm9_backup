@@ -1,0 +1,52 @@
+U-boot参数：
+1，从NAND加载root文件系统
+setenv bootargs root=/dev/mtdblock2 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+或setenv bootargs root=/dev/mtdblock2 console=ttySAC0,115200
+
+2，从nfs加载root文件系统
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.68:/home/fedora/workspace/root-qtopia ,tcp rw ip=202.194.201.250 init=/linuxrc
+
+3，linux挂载nfs
+mount -t nfs -o nolock,tcp 202.194.201.68:/home/fedora/workspace/root-qtopia /mnt
+
+4，用SD卡启动，并tftp下载裸机程序到nandflash
+setenv boot_luoji "nand erase 0 40000;movi read 3800000# 40000 c0008000;nand write c0008000 0 40000;"
+setenv boot_1 "nand erase 0 40000;tftp c0008000 app.bin;nand write c0008000 0 40000;"
+run boot_1
+
+boot_1=nand erase 0 40000;tftp c0008000 app.bin;nand write c0008000 0 40000;
+boot_2=nand erase 0 80000;tftp c0008000 u-boot.bin;nand write c0008000 0 80000
+
+5，由zImage制作uImage
+在arch/arm/boot目录下：
+mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d zImage uImage
+
+make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
+
+6，uboot烧写YAFFS
+nand write.yaffs 30000000 600000 3996c00 
+
+7，bootargs相关内容：
+root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m init=/linuxrc
+noinitrd root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+noinitrd root=/dev/mtdblock2 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+noinitrd root=/dev/mtdblock1 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+
+可以用的：
+mount -t nfs -o nolock,tcp 202.194.201.222:/home/wu/workspace/root-qtopia /mnt 
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-qtopia ,tcp rw ip=202.194.201.60
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60
+注释：	nfsroot=[<server-ip>:]<root-dir>[,<nfs-options>]
+	ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>，见linux内核Documentation/nfsroot.txt
+setenv bootargs root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+
+8，编译内核，生成uImage
+make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
+
+9，uboot上tftp内核并烧写
+boot_1=nand erase A0000 200000;tftp 30000000 uImage;nand write 30000000 A0000 200000
+run boot1
+
+10，用helper2416的SD版uboot启动nand上的内核:
+setenv bootcmd "nand read 30008000 a0000 360000;bootm 30008000"
+setenv bootargs "console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.59:180.201.19.176:202.194.201.254:255.255.255.0"

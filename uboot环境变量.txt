@@ -1,0 +1,80 @@
+baudrate=115200
+boot_1=nand erase A0000 200000;tftp 30000000 uImage;nand write 30000000 A0000 200000
+bootargs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_gw=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_nand=bootargs=root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+bootargs_nfs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.18.222:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=180.201.18.6
+bootcmd=nand read 30008000 kernel;bootm 30008000
+bootdelay=5
+ethact=smc911x
+ethaddr=00:40:5c:26:0a:5b
+fileaddr=30000000
+filesize=3996C00
+gatewayip=202.194.201.254
+ipaddr=202.194.201.68
+mtddevname=u-boot
+mtddevnum=0
+mtdids=nand0=2416-0
+mtdparts=mtdparts=2416-0:512k(u-boot),128k(params),3456k(kernel),-(rootfs)
+netmask=255.255.255.0
+partition=nand0,0
+serverip=180.201.19.176
+stderr=serial
+stdin=serial
+stdout=serial
+
+
+
+baudrate=115200
+boot_1=nand erase A0000 200000;tftp 30000000 uImage;nand write 30000000 A0000 200000
+bootargs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.69:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_gw=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_nand=bootargs=root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+bootargs_nfs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.18.222:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=180.201.18.6
+bootcmd=nand read 30008000 kernel;bootm 30008000
+bootdelay=5
+ethact=smc911x
+ethaddr=00:40:5c:26:0a:5b
+fileaddr=30000000
+filesize=3996C00
+gatewayip=202.194.201.254
+ipaddr=202.194.201.69
+mtddevname=u-boot
+mtddevnum=0
+mtdids=nand0=2416-0
+mtdparts=mtdparts=2416-0:512k(u-boot),128k(params),3456k(kernel),-(rootfs)
+netmask=255.255.255.0
+partition=nand0,0
+serverip=180.201.19.176
+stderr=serial
+stdin=serial
+stdout=serial
+
+
+
+
+
+baudrate=115200
+boot_1=nand erase A0000 200000;tftp 30000000 uImage;nand write 30000000 A0000 200000
+bootargs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.59:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_gw=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60:180.201.19.176:202.194.201.254:255.255.255.0
+bootargs_nand=bootargs=root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+bootargs_nfs=console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.18.222:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=180.201.18.6
+bootcmd=nand read 30008000 kernel;bootm 30008000
+bootdelay=5
+ethact=smc911x
+ethaddr=00:40:5c:26:0a:5b
+fileaddr=30000000
+filesize=3996C00
+gatewayip=202.194.201.254
+ipaddr=202.194.201.69
+mtddevname=u-boot
+mtddevnum=0
+mtdids=nand0=2416-0
+mtdparts=mtdparts=2416-0:512k(u-boot),128k(params),3456k(kernel),-(rootfs)
+netmask=255.255.255.0
+partition=nand0,0
+serverip=180.201.19.176
+stderr=serial
+stdin=serial
+stdout=serial
