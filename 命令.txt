@@ -4,7 +4,9 @@ setenv bootargs root=/dev/mtdblock2 console=ttySAC0,115200 rootfstype=yaffs2 mem
 或setenv bootargs root=/dev/mtdblock2 console=ttySAC0,115200
 
 2，从nfs加载root文件系统
-setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.68:/home/fedora/workspace/root-qtopia ,tcp rw ip=202.194.201.250 init=/linuxrc
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.68:/home/fedora/workspace/root-qtopia 
+
+,tcp rw ip=202.194.201.250 init=/linuxrc
 
 3，linux挂载nfs
 mount -t nfs -o nolock,tcp 202.194.201.68:/home/fedora/workspace/root-qtopia /mnt
@@ -21,7 +23,9 @@ boot_2=nand erase 0 80000;tftp c0008000 u-boot.bin;nand write c0008000 0 80000
 在arch/arm/boot目录下：
 mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d zImage uImage
 
-make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
+make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage 
+
+arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
 
 6，uboot烧写YAFFS
 nand write.yaffs 30000000 600000 3996c00 
@@ -34,14 +38,28 @@ noinitrd root=/dev/mtdblock1 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
 
 可以用的：
 mount -t nfs -o nolock,tcp 202.194.201.222:/home/wu/workspace/root-qtopia /mnt 
-setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-qtopia ,tcp rw ip=202.194.201.60
-setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.60
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-qtopia ,tcp 
+
+rw ip=202.194.201.60
+setenv bootargs console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.222:/home/wu/workspace/root-
+
+qtopia/first_fs ,tcp rw ip=202.194.201.60
 注释：	nfsroot=[<server-ip>:]<root-dir>[,<nfs-options>]
-	ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>，见linux内核Documentation/nfsroot.txt
+	ip=<client-ip>:<server-ip>:<gw-ip>:<netmask>:<hostname>:<device>:<autoconf>，见linux内核
+
+Documentation/nfsroot.txt
 setenv bootargs root=/dev/mtdblock3 console=ttySAC0,115200 rootfstype=yaffs2 mem=64m
+默认网卡:setenv bootargs "console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.18.97:/home/wu/workspace/root-
+
+qtopia/first_fs ,tcp rw ip=202.194.201.59:180.201.18.97:202.194.201.254:255.255.255.0"
+选择网卡:setenv bootargs "console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=202.194.201.202:/home/wu/workspace/root-
+
+qtopia/first_fs ,tcp rw ip=202.194.201.252:202.194.201.202:202.194.201.254:255.255.255.0::eth0"
 
 8，编译内核，生成uImage
-make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
+make zImage && mkimage -A arm -O linux -T kernel -C none -a 30008000 -e 30008040 -n linux-2.6.22 -d arch/arm/boot/zImage 
+
+arch/arm/boot/uImage && cp arch/arm/boot/uImage /tftpboot/
 
 9，uboot上tftp内核并烧写
 boot_1=nand erase A0000 200000;tftp 30000000 uImage;nand write 30000000 A0000 200000
@@ -49,4 +67,28 @@ run boot1
 
 10，用helper2416的SD版uboot启动nand上的内核:
 setenv bootcmd "nand read 30008000 a0000 360000;bootm 30008000"
-setenv bootargs "console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-qtopia/first_fs ,tcp rw ip=202.194.201.59:180.201.19.176:202.194.201.254:255.255.255.0"
+setenv bootargs "console=ttySAC0,115200 root=/dev/nfs mem=64m nfsroot=180.201.19.176:/home/wu/workspace/root-
+
+qtopia/first_fs ,tcp rw ip=202.194.201.59:180.201.19.176:202.194.201.254:255.255.255.0"
+
+11，生成cscope和ctags数据文件
+把当前目录下所有指定类型的文件名写入cscope.files
+# find . -name "*.h" -o -name "*.c" -o -name "*.cpp" -o -name "*.s" -o -name "*.S"\
+# >cscope.files
+生成cscope数据库文件
+# cscope -bkq -i cscope.files
+生成ctags数据库文件
+ctags -R
+
+12，排除指定目录下的文件
+UBOOT=/home/wu/workspace/u-boot-2012/u-boot-2012.04.01
+cd /       
+find  $UBOOT \
+-path "$UBOOT/arch/*" ! -path "$UBOOT/arch/arm*" -prune -o \
+-path "$UBOOT/include/configs/*"  ! -path "$UBOOT/include/configs/smdk*" -prune -o \
+-path "$UBOOT/tmp*" -prune -o                                           \
+-path "$UBOOT/Documentation*" -prune -o                                 \
+-path "$UBOOT/scripts*" -prune -o                                       \
+-path "$UBOOT/board/*" ! -path "$UBOOT/board/samsung*" -prune -o \
+-name "*.[chxsS]" -print >$UBOOT/cscope.files1
+
